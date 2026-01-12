@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>APS.EDU School Portal</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1020; --panel:#0f172a; --card:#0b1220; --ring:#1f2937; --muted:#93a4b5; --text:#e5e7eb;
+      --primary:#22c55e; --primary-2:#16a34a; --accent:#38bdf8; --danger:#ef4444; --warning:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,var(--bg) 0%, #0f172a 60%, #09121c 100%); color:var(--text);
+    }
+    header{
+      position:sticky; top:0; z-index:100; background:rgba(15,23,42,.75); backdrop-filter:saturate(120%) blur(8px);
+      border-bottom:1px solid var(--ring);
+    }
+    .nav{max-width:1200px; margin:0 auto; padding:10px 16px; display:flex; align-items:center; gap:10px}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px}
+    .brand img{width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--ring)}
+    .nav-links{display:flex; flex-wrap:wrap; gap:8px; margin-left:auto}
+    .nav a, .nav button{padding:8px 10px; border-radius:10px; border:1px solid transparent; background:transparent; color:var(--text); font-weight:600; cursor:pointer}
+    .nav a.active, .nav a:hover, .nav button:hover{border-color:#334155; background:#0b1220}
+    .container{max-width:1200px; margin:22px auto; padding:0 14px}
+    .card{
+      background:radial-gradient(1200px 500px at 10% 0%, #0d1628 0%, #0a1322 35%, var(--card) 100%);
+      border:1px solid var(--ring); border-radius:16px; padding:16px; box-shadow:0 30px 60px rgba(0,0,0,.35)
+    }
+    h1{margin:0 0 6px; font-size:1.7rem}
+    h2{margin:6px 0 12px; font-size:1.25rem}
+    h3{margin:4px 0 8px; font-size:1.05rem}
+    .muted{color:#9fb0c2}
+    .grid{display:grid; gap:14px}
+    .cols-3{grid-template-columns:repeat(3,1fr)}
+    .cols-2{grid-template-columns:repeat(2,1fr)}
+    @media(max-width:980px){.cols-3{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:700px){.cols-2,.cols-3{grid-template-columns:1fr}}
+    .toolbar{display:flex; gap:8px; flex-wrap:wrap}
+    .btn{
+      display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; border:1px solid var(--ring);
+      background:#0b1220; color:var(--text); font-weight:600; cursor:pointer
+    }
+    .btn.primary{background:linear-gradient(180deg,var(--primary),var(--primary-2)); border-color:#14532d; color:#08140d}
+    .btn.accent{background:linear-gradient(180deg,#3dd6ff,#1aaee6); border-color:#0b5b7a; color:#041018}
+    .btn.ghost{background:transparent}
+    .btn.danger{background:linear-gradient(180deg,#ff6b6b,#ef4444); border-color:#7f1d1d; color:#1a0a0a}
+    input[type=text],input[type=password],input[type=url],select,textarea{
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--ring); background:#0b1220; color:var(--text)
+    }
+    textarea{min-height:100px; resize:vertical}
+    label{font-weight:600; margin-bottom:6px; display:block}
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    @media(max-width:700px){.row{grid-template-columns:1fr}}
+    .list{display:flex; flex-direction:column; gap:10px}
+    .item{display:flex; gap:12px; align-items:flex-start; border:1px solid var(--ring); border-radius:12px; padding:12px; background:#0b1220}
+    .thumb{width:96px; height:72px; object-fit:cover; border-radius:8px; border:1px solid var(--ring)}
+    .chip{display:inline-flex; align-items:center; gap:6px; padding:6px 8px; border-radius:999px; font-size:.85rem; border:1px solid #334155; color:#cbd5e1}
+    .pending{background:#1e293b}
+    .approved{background:#052e1b; border-color:#14532d}
+    .rejected{background:#3b1e1e; border-color:#7f1d1d}
+    .hero{
+      border-radius:16px; padding:24px; border:1px solid var(--ring);
+      background:
+        radial-gradient(1200px 500px at 0% 0%, rgba(34,197,94,.12) 0%, transparent 55%),
+        radial-gradient(1200px 500px at 100% 0%, rgba(56,189,248,.12) 0%, transparent 55%),
+        linear-gradient(180deg,#0b1220 0%, #0a1424 100%)
+    }
+    .tools{display:grid; gap:14px; grid-template-columns:repeat(4,1fr)}
+    @media(max-width:980px){.tools{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){.tools{grid-template-columns:1fr}}
+    .tool{display:flex; flex-direction:column; gap:10px; border:1px solid var(--ring); border-radius:12px; padding:14px; background:#0b1220}
+    .icon{width:44px; height:44px; border-radius:10px; display:grid; place-items:center; background:#0d1628; border:1px solid var(--ring)}
+    footer{padding:24px 16px; color:#94a3b8; text-align:center}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">
+        <img id="brandLogo" src="" alt="School Logo"/>
+        <span id="brandName">Your School</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#" data-view="home" class="active"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="#" data-view="safeBook"><i class="fa-solid fa-images"></i> Safe Book</a>
+        <a href="#" data-view="homework"><i class="fa-solid fa-book"></i> Homework</a>
+        <a href="#" data-view="tools"><i class="fa-solid fa-wand-magic-sparkles"></i> Kids Tools</a>
+        <a href="#" data-view="about"><i class="fa-solid fa-circle-info"></i> About</a>
+      </nav>
+      <div class="nav-links">
+        <span id="sessionBadge" class="chip"><i class="fa-solid fa-user-shield"></i> Guest</span>
+    	 <button id="loginBtn" class="btn ghost"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+ 	 <button id="logoutBtn" class="btn ghost hidden"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+        <button id="adminSettingsBtn" class="btn accent hidden"><i class="fa-solid fa-gear"></i> Admin</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Home -->
+    <section id="view-home" class="hero">
+      <h1 id="homeTitle">Welcome to Your School Portal</h1>
+      <p class="muted">Share moments, assign homework, and help kids explore AI tools — all in one place.</p>
+      <div class="toolbar">
+        <button class="btn primary" data-view="safeBook"><i class="fa-solid fa-camera-retro"></i> Open Safe Book</button>
+        <button class="btn" data-view="homework"><i class="fa-solid fa-book-open"></i> View Homework</button>
+        <button class="btn" data-view="tools"><i class="fa-solid fa-robot"></i> Explore Tools</button>
+      </div>
+    </section>
+
+    <!-- Safe Book -->
+    <section id="view-safeBook" class="card hidden">
+      <h2><i class="fa-solid fa-images"></i> Safe Book: Photos & Videos</h2>
+      <p class="muted">Admins and teachers can upload kids’ photos/videos. Parents/public see approved posts.</p>
+      <div class="row">
+        <div class="card">
+          <h3>Upload media</h3>
+          <p class="muted">Login as Admin/Teacher. Admin approval required for public display.</p>
+          <div class="row">
+            <div>
+              <label>Title</label>
+              <input id="mediaTitle" type="text" placeholder="e.g., Sports Day Highlights"/>
+            </div>
+            <div>
+              <label>Class</label>
+              <select id="mediaClass"></select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Media URL</label>
+              <input id="mediaUrl" type="url" placeholder="Paste image (.jpg/.png) or video (.mp4/.webm) URL"/>
+            </div>
+            <div>
+              <label>Type</label>
+              <select id="mediaType">
+                <option value="image">Image</option>
+                <option value="video">Video</option>
+              </select>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button id="submitMediaBtn" class="btn primary"><i class="fa-solid fa-cloud-arrow-up"></i> Submit</button>
+            <span class="muted" id="mediaMsg"></span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Moderation</h3>
+          <p class="muted">Admin approves or rejects submissions.</p>
+          <div id="mediaModeration" class="list"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Public gallery</h3>
+        <div id="gallery" class="grid cols-3"></div>
+      </div>
+    </section>
+
+    <!-- Homework -->
+    <section id="view-homework" class="card hidden">
+      <h2><i class="fa-solid fa-book"></i> Homework</h2>
+      <div class="row">
+        <div class="card">
+          <h3>Post homework (teacher)</h3>
+          <div class="row">
+            <div>
+              <label>Class</label>
+              <select id="hwClass"></select>
+            </div>
+            <div>
+              <label>Subject</label>
+              <input id="hwSubject" type="text" placeholder="e.g., Mathematics"/>
+            </div>
+          </div>
+          <div>
+            <label>Details</label>
+            <textarea id="hwDetails" placeholder="Write homework instructions..."></textarea>
+          </div>
+          <div class="toolbar">
+            <button id="submitHwBtn" class="btn primary"><i class="fa-solid fa-paper-plane"></i> Submit</button>
+            <span class="muted" id="hwMsg"></span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Approval queue (admin)</h3>
+          <div id="hwModeration" class="list"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Approved homework (public)</h3>
+        <div id="hwApproved" class="list"></div>
+      </div>
+    </section>
+
+    <!-- Kids Tools -->
+    <section id="view-tools" class="card hidden">
+      <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Kids AI Tools</h2>
+      <p class="muted">Explore safe, free tools for translation, image creation, tutoring, and voice generation.</p>
+      <div class="tools">
+        <div class="tool">
+          <div class="icon"><i class="fa-solid fa-language"></i></div>
+          <div>
+            <h3>Translate any text</h3>
+            <p class="muted">Kid-friendly translation, simplified outputs, multiple languages.</p>
+            <a class="btn accent" target="_blank" rel="noopener" href="https://www.bing.com/search?q=free+translation&qs=MT&pq=free+tran&sc=12-9&cvid=78A6C58761784C1FBBF65FC51AB73EBC&FORM=QBRE&sp=1&ghc=1&lq=0/">
+              <i class="fa-solid fa-up-right-from-square"></i> For Kids Translator
+            </a>
+          </div>
+        </div>
+        <div class="tool">
+          <div class="icon"><i class="fa-solid fa-image"></i></div>
+          <div>
+            <h3>Generate free images</h3>
+            <p class="muted">Create AI art with free daily usage.</p>
+            <div class="toolbar">
+              <a class="btn accent" target="_blank" rel="noopener" href="https://stabledifffusion.com//">
+                <i class="fa-solid fa-paintbrush"></i> Playground AI
+              </a>
+              <a class="btn ghost" target="_blank" rel="noopener" href="https://artlist.io/text-to-image-ai?utm_source=bing&utm_medium=cpc&utm_campaign=627562036&utm_content=1142394384237317&utm_term=photo%20ai%20generator&keyword=photo%20ai%20generator&ad=&matchtype=e&device=c&msclkid=5fa709eb6c3f11a6ffe9608940f24bce&utm_source=bing&utm_medium=cpc&utm_campaign=GenAI_tCPA&utm_term=photo%20ai%20generator&utm_content=Photo_Generator_%5BGenAI_Image%5D">
+                <i class="fa-brands fa-microsoft"></i> Bing Image Creator
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="tool">
+          <div class="icon"><i class="fa-solid fa-robot"></i></div>
+          <div>
+            <h3>AI tutor (voice & text)</h3>
+            <p class="muted">Interactive learning assistant for kids.</p>
+            <div class="toolbar">
+              <a class="btn accent" target="_blank" rel="noopener" href="https://www.yeschat.ai/features/tutor-ai">
+                <i class="fa-solid fa-chalkboard-user"></i> Tutor AI (web)
+              </a>
+              <a class="btn ghost" target="_blank" rel="noopener" href="https://www.yeschat.ai/features/tutor-ai">
+                <i class="fa-brands fa-android"></i> Miss SARA.ai (app)
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="tool">
+          <div class="icon"><i class="fa-solid fa-headphones"></i></div>
+          <div>
+            <h3>Generate voices</h3>
+            <p class="muted">Make downloadable voiceovers for lessons.</p>
+            <div class="toolbar">
+              <a class="btn accent" target="_blank" rel="noopener" href="https://typecast.ai/voices/kid-voice-generator">
+                <i class="fa-solid fa-microphone-lines"></i> Typecast Kid Voices
+              </a>
+              <a class="btn ghost" target="_blank" rel="noopener" href="https://voicegenerator.io/?utm_source=copilot.com">
+                <i class="fa-solid fa-file-audio"></i> SpeechGen Child TTS
+              </a>
+              <a class="btn ghost" target="_blank" rel="noopener" href="https://voicegenerator.io/?utm_source=copilot.com/">
+                <i class="fa-solid fa-volume-high"></i> Voice.ai Child TTS
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:10px">Some tools may require free accounts. Supervise younger children.</p>
+    </section>
+
+    <!-- About -->
+    <section id="view-about" class="card hidden">
+      <h2><i class="fa-solid fa-circle-info"></i> About this portal</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Admin features</h3>
+          <ul>
+            <li class="muted">Edit school name and logo (instant update sitewide).</li>
+            <li class="muted">Create teacher accounts and manage classes.</li>
+            <li class="muted">Approve/Reject media and homework posts.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Data model</h3>
+          <ul>
+            <li class="muted">Runs locally using browser localStorage.</li>
+            <li class="muted">Use hosted URLs for media, or connect a backend for uploads.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin panel -->
+    <section id="adminPanel" class="card hidden">
+      <h2><i class="fa-solid fa-gear"></i> Admin settings</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>School branding</h3>
+          <label>School name</label>
+          <input id="schoolName" type="text" placeholder="e.g., APS.EDU Oghi"/>
+          <label>Logo URL</label>
+          <input id="schoolLogo" type="url" placeholder="Paste logo URL (PNG/JPG)"/>
+          <div class="toolbar">
+            <button id="saveBrandBtn" class="btn primary"><i class="fa-solid fa-floppy-disk"></i> Save branding</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Classes</h3>
+          <div class="row">
+            <div><input id="newClass" type="text" placeholder="e.g., Grade 2-A"/></div>
+            <div><button id="addClassBtn" class="btn"><i class="fa-solid fa-plus"></i> Add class</button></div>
+          </div>
+          <div id="classList" class="list"></div>
+        </div>
+      </div>
+
+      <div class="grid cols-2" style="margin-top:12px">
+        <div class="card">
+          <h3>Teacher accounts</h3>
+          <div class="row">
+            <div><input id="teacherName" type="text" placeholder="Teacher full name"/></div>
+            <div><input id="teacherUser" type="text" placeholder="Username"/></div>
+          </div>
+          <div class="row">
+            <div><input id="teacherPass" type="password" placeholder="Password"/></div>
+            <div>
+              <select id="teacherClassAssign">
+                <option value="">Assign class (optional)</option>
+              </select>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button id="addTeacherBtn" class="btn primary"><i class="fa-solid fa-user-plus"></i> Create account</button>
+          </div>
+          <div id="teacherList" class="list"></div>
+        </div>
+
+        <div class="card">
+          <h3>Moderation center</h3>
+          <p class="muted">Quick actions for pending media and homework.</p>
+          <div class="toolbar">
+            <button id="approveAllMedia" class="btn"><i class="fa-solid fa-check-double"></i> Approve all media</button>
+            <button id="approveAllHw" class="btn"><i class="fa-solid fa-check-double"></i> Approve all homework</button>
+            <button id="clearDemoBtn" class="btn danger"><i class="fa-solid fa-trash-can"></i> Clear demo data</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Auth modal -->
+    <section id="authModal" class="card hidden">
+      <h2><i class="fa-solid fa-right-to-bracket"></i> Login</h2>
+      <p class="muted">Login as Admin or Teacher.</p>
+      <div class="row">
+        <div><label>Username</label><input id="loginUser" type="text" placeholder="admin or teacher username"/></div>
+        <div><label>Password</label><input id="loginPass" type="password" placeholder="password"/></div>
+      </div>
+      <div class="toolbar">
+        <button id="doLoginBtn" class="btn primary"><i class="fa-solid fa-key"></i> Login</button>
+        <button id="cancelLoginBtn" class="btn ghost"><i class="fa-solid fa-xmark"></i> Cancel</button>
+        <span id="loginMsg" class="muted"></span>
+      </div>
+      <p class="muted" style="margin-top:8px">Default admin: user “admin”, pass “1”. Change after login.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div>&copy; <span id="year"></span> <span id="footerSchool">Your School</span>. All rights reserved.</div>
+  </footer>
+
+  <script>
+    // --- State ---
+    const S = {
+      brand:{name:"Your School", logo:""},
+ users:{admin:{user:"admin", pass:"admin"}, teachers:[]},
+      classes:["Grade 1","Grade 2","Grade 3"],
+      session:null, // {role:"admin"|"teacher", user:"..."}
+      media:[],     // {id,title,cls,type,url,by,status:"pending"|"approved"|"rejected",ts}
+      homework:[],  // {id,cls,subject,details,by,status,ts}
+    };
+    const LSKEY="school_portal_v1";
+    const q=(s)=>document.querySelector(s);
+    const el=(html)=>{const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstChild;}
+    const save=()=>localStorage.setItem(LSKEY, JSON.stringify(S));
+    const load=()=>{const raw=localStorage.getItem(LSKEY); if(raw){try{Object.assign(S, JSON.parse(raw));}catch(e){}}};
+    load();
+
+    // --- Views ---
+    const views=["home","safeBook","homework","tools","about"];
+    document.querySelectorAll(".nav a").forEach(a=>a.addEventListener("click",(e)=>{e.preventDefault(); showView(a.dataset.view);} ));
+    function showView(v){
+      views.forEach(id=>{
+        q(`#view-${id}`).classList.toggle("hidden", id!==v);
+        document.querySelector(`.nav a[data-view='${id}']`)?.classList.toggle("active", id===v);
+      });
+      if(v==="safeBook"){renderGallery(); renderModerationMedia();}
+      if(v==="homework"){renderHwApproved(); renderModerationHw();}
+    }
+
+    // --- Branding ---
+    function applyBrand(){
+      q("#brandName").textContent=S.brand.name||"Your School";
+      q("#footerSchool").textContent=S.brand.name||"Your School";
+      q("#homeTitle").textContent=`Welcome to ${S.brand.name||"Your School"} Portal`;
+      const logo=S.brand.logo||"https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=200&h=200&fit=crop&auto=format";
+      q("#brandLogo").src=logo;
+      q("#schoolName").value=S.brand.name||"";
+      q("#schoolLogo").value=S.brand.logo||"";
+    }
+    applyBrand();
+
+    // --- Session ---
+    function applySession(){
+      const badge=q("#sessionBadge");
+      const loginBtn=q("#loginBtn");
+      const logoutBtn=q("#logoutBtn");
+      const adminBtn=q("#adminSettingsBtn");
+      if(S.session){
+        badge.innerHTML=S.session.role==="admin"
+          ? '<i class="fa-solid fa-user-shield"></i> Admin'
+          : `<i class="fa-solid fa-chalkboard-teacher"></i> ${S.session.user}`;
+        loginBtn.classList.add("hidden");
+        logoutBtn.classList.remove("hidden");
+        adminBtn.classList.toggle("hidden", S.session.role!=="admin");
+      }else{
+        badge.innerHTML='<i class="fa-solid fa-user-shield"></i> Guest';
+        loginBtn.classList.remove("hidden");
+        logoutBtn.classList.add("hidden");
+        adminBtn.classList.add("hidden");
+      }
+    }
+    applySession();
+
+    // --- Class selects ---
+    function refreshClassSelects(){
+      [q("#mediaClass"), q("#hwClass"), q("#teacherClassAssign")].forEach(sel=>{
+        sel.innerHTML="";
+        const options=S.classes.map(c=>`<option value="${c}">${c}</option>`).join("");
+        sel.insertAdjacentHTML("beforeend", options);
+        if(sel.id==="teacherClassAssign"){
+          sel.insertAdjacentHTML("afterbegin", '<option value="">Assign class (optional)</option>');
+        }
+      });
+      renderClassList();
+    }
+    refreshClassSelects();
+
+    // --- Auth modal ---
+    q("#loginBtn").addEventListener("click",()=>q("#authModal").classList.remove("hidden"));
+    q("#cancelLoginBtn").addEventListener("click",()=>q("#authModal").classList.add("hidden"));
+    q("#doLoginBtn").addEventListener("click",()=>{
+      const user=q("#loginUser").value.trim();
+      const pass=q("#loginPass").value.trim();
+      const isAdmin = user===S.users.admin.user && pass===S.users.admin.pass;
+      const teacher = S.users.teachers.find(t=>t.user===user && t.pass===pass);
+      if(isAdmin){ S.session={role:"admin", user:"admin"}; q("#authModal").classList.add("hidden"); }
+      else if(teacher){ S.session={role:"teacher", user:teacher.user}; q("#authModal").classList.add("hidden"); }
+      else{ q("#loginMsg").textContent="Invalid credentials."; return; }
+      save(); applySession();
+    });
+    q("#logoutBtn").addEventListener("click",()=>{ S.session=null; save(); applySession(); });
+
+    // --- Admin panel toggle ---
+    q("#adminSettingsBtn").addEventListener("click",()=>{
+      if(S.session?.role==="admin"){ q("#adminPanel").classList.toggle("hidden"); }
+    });
+
+    // --- Branding save ---
+    q("#saveBrandBtn").addEventListener("click",()=>{
+      S.brand.name=q("#schoolName").value.trim() || "Your School";
+      S.brand.logo=q("#schoolLogo").value.trim();
+      save(); applyBrand();
+      alert("Branding updated.");
+    });
+
+    // --- Classes CRUD ---
+    q("#addClassBtn").addEventListener("click",()=>{
+      const c=q("#newClass").value.trim();
+      if(!c) return;
+      if(!S.classes.includes(c)) S.classes.push(c);
+      q("#newClass").value="";
+      save(); refreshClassSelects();
+    });
+    function renderClassList(){
+      const list=q("#classList"); list.innerHTML="";
+      S.classes.forEach(cls=>{
+        const item=el(`<div class="item">
+          <span class="chip"><i class="fa-solid fa-school"></i> ${cls}</span>
+          <span style="flex:1"></span>
+          <button class="btn ghost" data-del="${cls}"><i class="fa-solid fa-trash"></i></button>
+        </div>`);
+        item.querySelector("button").addEventListener("click",()=>{
+          S.classes=S.classes.filter(c=>c!==cls);
+          save(); refreshClassSelects();
+        });
+        list.appendChild(item);
+      });
+      if(!list.children.length){ list.innerHTML='<span class="muted">No classes yet.</span>'; }
+    }
+
+    // --- Teacher accounts ---
+    q("#addTeacherBtn").addEventListener("click",()=>{
+      const name=q("#teacherName").value.trim();
+      const user=q("#teacherUser").value.trim();
+      const pass=q("#teacherPass").value.trim();
+      const cls=q("#teacherClassAssign").value;
+      if(!name||!user||!pass){ alert("Fill name, username, and password."); return; }
+      if(S.users.teachers.some(t=>t.user===user)){ alert("Username already exists."); return; }
+      S.users.teachers.push({name,user,pass,cls});
+      q("#teacherName").value=""; q("#teacherUser").value=""; q("#teacherPass").value="";
+      save(); renderTeacherList();
+    });
+    function renderTeacherList(){
+      const list=q("#teacherList"); list.innerHTML="";
+      S.users.teachers.forEach(t=>{
+        const item=el(`<div class="item">
+          <div style="flex:1">
+            <div><strong>${t.name}</strong> <span class="muted">@${t.user}</span></div>
+            <div class="muted">Class: ${t.cls||"—"}</div>
+          </div>
+          <button class="btn ghost" data-del="${t.user}"><i class="fa-solid fa-trash"></i></button>
+        </div>`);
+        item.querySelector("button").addEventListener("click",()=>{
+          S.users.teachers=S.users.teachers.filter(x=>x.user!==t.user);
+          save(); renderTeacherList();
+        });
+        list.appendChild(item);
+      });
+      if(!list.children.length){ list.innerHTML='<span class="muted">No teachers yet.</span>'; }
+    }
+    renderTeacherList();
+
+    // --- Media upload & moderation ---
+    q("#submitMediaBtn").addEventListener("click",()=>{
+      if(!S.session){ q("#mediaMsg").textContent="Login required."; return; }
+      const title=q("#mediaTitle").value.trim();
+      const cls=q("#mediaClass").value;
+      const url=q("#mediaUrl").value.trim();
+      const type=q("#mediaType").value;
+      if(!title||!url){ q("#mediaMsg").textContent="Title and URL required."; return; }
+      const id="m"+Date.now();
+      S.media.unshift({id,title,cls,type,url,by:S.session.user,status:"pending",ts:Date.now()});
+      q("#mediaTitle").value=""; q("#mediaUrl").value="";
+      q("#mediaMsg").textContent="Submitted for approval.";
+      save(); renderModerationMedia();
+    });
+    function renderModerationMedia(){
+      const list=q("#mediaModeration"); list.innerHTML="";
+      S.media.filter(x=>x.status==="pending").forEach(m=>{
+        const item=el(`<div class="item">
+          ${m.type==="image" ? `<img class="thumb" src="${m.url}" alt="${m.title}">`
+            : `<div class="thumb" style="display:grid;place-items:center;background:#0d1628"><i class="fa-solid fa-video"></i></div>`}
+          <div style="flex:1">
+            <div><strong>${m.title}</strong> <span class="chip pending"><i class="fa-solid fa-hourglass-half"></i> Pending</span></div>
+            <div class="muted">Class: ${m.cls} — by ${m.by}</div>
+            <div class="toolbar">
+              <button class="btn" data-approve="${m.id}"><i class="fa-solid fa-check"></i> Approve</button>
+              <button class="btn ghost" data-reject="${m.id}"><i class="fa-solid fa-xmark"></i> Reject</button>
+            </div>
+          </div>
+        </div>`);
+        item.querySelector("[data-approve]").addEventListener("click",()=>{
+          if(S.session?.role!=="admin"){ alert("Admin only."); return; }
+          const mm=S.media.find(x=>x.id===m.id); mm.status="approved"; save(); renderModerationMedia(); renderGallery();
+        });
+        item.querySelector("[data-reject]").addEventListener("click",()=>{
+          if(S.session?.role!=="admin"){ alert("Admin only."); return; }
+          const mm=S.media.find(x=>x.id===m.id); mm.status="rejected"; save(); renderModerationMedia();
+        });
+        list.appendChild(item);
+      });
+      if(!list.children.length){ list.innerHTML='<span class="muted">No pending media.</span>'; }
+    }
+    function renderGallery(){
+      const gal=q("#gallery"); gal.innerHTML="";
+      S.media.filter(m=>m.status==="approved").forEach(m=>{
+        const card=el(`<div class="card">
+          <div class="toolbar" style="justify-content:space-between">
+            <div><strong>${m.title}</strong> <span class="chip approved"><i class="fa-solid fa-check"></i> Approved</span></div>
+            <span class="chip"><i class="fa-solid fa-school"></i> ${m.cls}</span>
+          </div>
+          <div style="margin-top:8px">
+            ${m.type==="image"
+              ? `<img src="${m.url}" alt="${m.title}" style="width:100%;height:220px;object-fit:cover;border-radius:10px;border:1px solid var(--ring)">`
+              : `<video controls style="width:100%;height:220px;border-radius:10px;border:1px solid var(--ring)">
+                  <source src="${m.url}">Your browser cannot play the video.</video>`}
+          </div>
+        </div>`);
+        gal.appendChild(card);
+      });
+      if(!gal.children.length){ gal.innerHTML='<div class="muted">No approved posts yet.</div>'; }
+    }
+
+    // --- Homework post & moderation ---
+    q("#submitHwBtn").addEventListener("click",()=>{
+      if(!S.session){ q("#hwMsg").textContent="Login required."; return; }
+      if(S.session.role!=="teacher" && S.session.role!=="admin"){ q("#hwMsg").textContent="Teacher or Admin only."; return; }
+      const cls=q("#hwClass").value;
+      const subject=q("#hwSubject").value.trim();
+      const details=q("#hwDetails").value.trim();
+      if(!subject||!details){ q("#hwMsg").textContent="Subject and details required."; return; }
+      const id="h"+Date.now();
+      S.homework.unshift({id,cls,subject,details,by:S.session.user,status:"pending",ts:Date.now()});
+      q("#hwSubject").value=""; q("#hwDetails").value="";
+      q("#hwMsg").textContent="Homework submitted for approval.";
+      save(); renderModerationHw();
+    });
+    function renderModerationHw(){
+      const list=q("#hwModeration"); list.innerHTML="";
+      S.homework.filter(h=>h.status==="pending").forEach(h=>{
+        const item=el(`<div class="item">
+          <div style="flex:1">
+            <div><strong>${h.subject}</strong> <span class="chip pending"><i class="fa-solid fa-hourglass-half"></i> Pending</span></div>
+            <div class="muted">Class: ${h.cls} — by ${h.by}</div>
+            <div class="muted" style="margin-top:6px">${h.details}</div>
+            <div class="toolbar" style="margin-top:8px">
+              <button class="btn" data-approve="${h.id}"><i class="fa-solid fa-check"></i> Approve</button>
+              <button class="btn ghost" data-reject="${h.id}"><i class="fa-solid fa-xmark"></i> Reject</button>
+            </div>
+          </div>
+        </div>`);
+        item.querySelector("[data-approve]").addEventListener("click",()=>{
+          if(S.session?.role!=="admin"){ alert("Admin only."); return; }
+          const hh=S.homework.find(x=>x.id===h.id); hh.status="approved"; save(); renderModerationHw(); renderHwApproved();
+        });
+        item.querySelector("[data-reject]").addEventListener("click",()=>{
+          if(S.session?.role!=="admin"){ alert("Admin only."); return; }
+          const hh=S.homework.find(x=>x.id===h.id); hh.status="rejected"; save(); renderModerationHw();
+        });
+        list.appendChild(item);
+      });
+      if(!list.children.length){ list.innerHTML='<span class="muted">No pending homework.</span>'; }
+    }
+    function renderHwApproved(){
+      const list=q("#hwApproved"); list.innerHTML="";
+      S.homework.filter(h=>h.status==="approved").forEach(h=>{
+        const item=el(`<div class="item">
+          <div class="chip approved"><i class="fa-solid fa-check"></i> Approved</div>
+          <div style="flex:1">
+            <div><strong>${h.subject}</strong></div>
+            <div class="muted">Class: ${h.cls}</div>
+            <div class="muted" style="margin-top:6px">${h.details}</div>
+          </div>
+        </div>`);
+        list.appendChild(item);
+      });
+      if(!list.children.length){ list.innerHTML='<span class="muted">No approved homework yet.</span>'; }
+    }
+
+    // --- Moderation shortcuts ---
+    q("#approveAllMedia").addEventListener("click",()=>{
+      if(S.session?.role!=="admin"){ alert("Admin only."); return; }
+      S.media.forEach(m=>{ if(m.status==="pending") m.status="approved"; });
+      save(); renderModerationMedia(); renderGallery();
+    });
+    q("#approveAllHw").addEventListener("click",()=>{
+      if(S.session?.role!=="admin"){ alert("Admin only."); return; }
+      S.homework.forEach(h=>{ if(h.status==="pending") h.status="approved"; });
+      save(); renderModerationHw(); renderHwApproved();
+    });
+    q("#clearDemoBtn").addEventListener("click",()=>{
+      if(S.session?.role!=="admin"){ alert("Admin only."); return; }
+      if(confirm("Clear all demo data?")){
+        S.media=[]; S.homework=[]; S.users.teachers=[]; S.classes=["Grade 1","Grade 2","Grade 3"];
+        save(); refreshClassSelects(); renderTeacherList(); renderModerationHw(); renderModerationMedia(); renderGallery(); renderHwApproved();
+      }
+    });
+
+    // --- Footer year ---
+    q("#year").textContent=new Date().getFullYear();
+
+    // --- Default view ---
+    showView("home");
+  </script>
+</body>
+</html>
